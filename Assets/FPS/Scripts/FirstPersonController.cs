@@ -13,7 +13,9 @@ public class FirstPersonController : MonoBehaviour
     
     //Character stats
     public float MouseSensitivity = 3;
+    public float CurrentSpeed = 10;
     public float WalkSpeed = 10;
+    public float sprintSpeed = 20;
     public float JumpPower = 7;
     
     //A list of all the solid objects I'm currently touching
@@ -23,10 +25,13 @@ public class FirstPersonController : MonoBehaviour
     
     void Start()
     {
+        CurrentSpeed = WalkSpeed;
         //Turn off my mouse and lock it to center screen
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
+
+
 
     
     void Update()
@@ -55,7 +60,7 @@ public class FirstPersonController : MonoBehaviour
             if (Input.GetKey(KeyCode.D))
                 move += transform.right;
             //I reduce my total movement to 1 and then multiply it by my speed
-            move = move.normalized * WalkSpeed;
+            move = move.normalized * CurrentSpeed;
             
             //If I hit jump and am on the ground, I jump
             if (JumpPower > 0 && Input.GetKeyDown(KeyCode.Space) && OnGround())
@@ -65,6 +70,15 @@ public class FirstPersonController : MonoBehaviour
             
             //Plug my calculated velocity into the rigidbody
             RB.linearVelocity = move;
+        }
+
+          if (Input.GetKey(KeyCode.LeftShift))
+        {
+            CurrentSpeed = sprintSpeed;
+        }
+        else
+        {
+            CurrentSpeed = WalkSpeed;
         }
 
         //If I click. . .
