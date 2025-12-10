@@ -779,7 +779,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RB: {fileID: 3149270933928261254}
   Anim: {fileID: 7227799919903319564}
-  Speed: 10
+  Speed: 15
   Target: {fileID: 0}
 --- !u!54 &3149270933928261254
 Rigidbody:
