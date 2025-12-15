@@ -36,5 +36,34 @@ public class NPCController : MonoBehaviour
         vel.y = RB.linearVelocity.y;
         //Plug it into my rigidbody
         RB.linearVelocity = vel;
+        Vector3 dir = RB.velocity.normalized;
+        dir.y = 0f;
+        rb.AddForce(dir * Knockback, ForceMode.Impulse);
     }
+    
+
+    public int damage = 10;
+    public float knockbackForce = 50f;
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            // Damage
+            Health playerHealth = collision.gameObject.GetComponent<Health>();
+            if (playerHealth != null)
+            {
+                playerHealth.TakeDamage(damage);
+            }
+
+            // Knockback
+            Rigidbody playerRB = collision.gameObject.GetComponent<Rigidbody>();
+            if (playerRB != null)
+            {
+                Vector3 knockDir = (collision.transform.position - transform.position).normalized;
+                playerRB.AddForce(knockDir * knockbackForce, ForceMode.Impulse);
+            }
+        }
+}
+
 }

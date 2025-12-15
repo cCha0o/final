@@ -88,6 +88,8 @@ public class FirstPersonController : MonoBehaviour
             Instantiate(ProjectilePrefab, Eyes.transform.position + Eyes.transform.forward,
                 Eyes.transform.rotation);
         }
+
+        
     }
 
     //I count as being on the ground if I'm touching at least one solid object
@@ -109,5 +111,15 @@ public class FirstPersonController : MonoBehaviour
     {
         //When I stop touching something, remove it from the list of things I'm touching
         Floors.Remove(other.gameObject);
+    }
+
+    private void PlayerTakeDmg(int dmg)
+    {
+        GameManager.gameManager._playerHealth.DmgUnit(dmg);
+    }
+
+    private void PlayerHeal(int healing)
+    {
+        GameManager.gameManager._playerHealth.HealUnit(healing);
     }
 }

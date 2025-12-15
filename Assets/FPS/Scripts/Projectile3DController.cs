@@ -21,14 +21,21 @@ public class Projectile3DController : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        //If I hit something with a rigidbody. . .
+        // Knockback
         Rigidbody rb = other.gameObject.GetComponent<Rigidbody>();
         if (rb != null)
         {
-            //I push them in the direction I'm flying with a power equal to my Knockback stat
             rb.AddForce(RB.linearVelocity.normalized * Knockback,ForceMode.Impulse);
         }
-        //If I hit anything, I despawn
+
+        // Damage
+        Health health = other.gameObject.GetComponent<Health>();
+        if (health != null)
+        {
+            health.TakeDamage(25);
+        }
+
         Destroy(gameObject);
     }
+
 }
