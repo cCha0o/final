@@ -1,41 +1,47 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Projectile3DController : MonoBehaviour
 {
-    //My components
+    // My components
     public Rigidbody RB;
-    
-    //How fast do I fly?
+
+    // How fast do I fly?
     public float Speed = 30;
-    //How hard do I knockback things I hit?
-    public float Knockback = 10;
+
+    // How hard do I knockback things I hit?
+    public float Knockback = 30;
 
     void Start()
     {
-        //When I spawn, I fly straight forwards at my Speed
+        // When I spawn, I fly straight forwards at my Speed
         RB.linearVelocity = transform.forward * Speed;
     }
 
     private void OnCollisionEnter(Collision other)
-    {
-        // Knockback
+    {   //knockback
         Rigidbody rb = other.gameObject.GetComponent<Rigidbody>();
         if (rb != null)
         {
-            rb.AddForce(RB.linearVelocity.normalized * Knockback,ForceMode.Impulse);
+            rb.AddForce(
+                RB.linearVelocity.normalized * Knockback,
+                ForceMode.Impulse
+            );
         }
-
-        // Damage
-        Health health = other.gameObject.GetComponent<Health>();
-        if (health != null)
+          NPCController npc = other.gameObject.GetComponent<NPCController>();
+        if (npc != null)
         {
-            health.TakeDamage(25);
+            Vector3 dir = other.transform.position - transform.position;
+            npc.ApplyKnockback(dir, Knockback);
         }
-
-        Destroy(gameObject);
+    {
+        EnemyHealth enemy = other.gameObject.GetComponent<EnemyHealth>();
+        if (enemy != null)
+        {
+            enemy.TakeDamage(10);
+        }
     }
 
+    Destroy(gameObject);
 }
+}
+

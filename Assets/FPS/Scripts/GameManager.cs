@@ -2,20 +2,20 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager gameManager;
+    public static GameManager gameManager { get; private set; }
 
-    public UnitHealth _playerHealth;
+    // Player health 
+    public UnitHealth _playerHealth = new UnitHealth(100, 100);
 
     void Awake()
     {
         if (gameManager != null && gameManager != this)
         {
-            Destroy(gameObject);
-            return;
+            Destroy(this);
         }
-
-        gameManager = this;
-
-        _playerHealth = new UnitHealth(100, 100);
+        else
+        {
+            gameManager = this;
+        }
     }
 }

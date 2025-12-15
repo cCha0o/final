@@ -667,9 +667,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7564086cb1095494c9f94b41e61054da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RB: {fileID: 1270940162}
-  Speed: 5
-  BulletPrefab: {fileID: 3385520667200393095, guid: fbbe44e8106a16f4b8f7d60f6b90291f, type: 3}
 --- !u!4 &1270940164
 Transform:
   m_ObjectHideFlags: 0
@@ -1035,9 +1032,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06bf4a4ce35035f4c8fbe1371d6c380b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Target: {fileID: 0}
-  Speed: 4
-  RB: {fileID: 2076447128}
 --- !u!4 &2076447130
 Transform:
   m_ObjectHideFlags: 0

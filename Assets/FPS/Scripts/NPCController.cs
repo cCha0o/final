@@ -1,69 +1,69 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class NPCController : MonoBehaviour
 {
-    //My components
     public Rigidbody RB;
     public Animator Anim;
+    public float Speed = 1f;
+    public int damage = 10;
 
-    //My stats
-    public float Speed = 1;
-    
-    //Who do I walk towards?
     public GameObject Target;
 
     void Start()
     {
-        //At the start of the game I should play my walk animation
         Anim.Play("Walking");
-        //I just walk forever, for now.
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        //Rotate to look at the player
-        transform.LookAt(Target.transform);
-        //Make a temp velocity variable to calculate how I should move
-        //By default, I keep my old momentum
-        Vector3 vel = RB.linearVelocity;
-        //Walk forwards, but don't do it perfectly. Lerp towards my desired speed
-        //This makes it so that if I take a knockback it takes a second for me to recover
-        vel = Vector3.Lerp(vel,transform.forward * Speed,10*Time.deltaTime);
-        //Use my old Y velocity, though. I shouldn't be able to fly
-        vel.y = RB.linearVelocity.y;
-        //Plug it into my rigidbody
-        RB.linearVelocity = vel;
-        Vector3 dir = RB.velocity.normalized;
-        dir.y = 0f;
-        rb.AddForce(dir * Knockback, ForceMode.Impulse);
-    }
-    
+        if (isKnockedBack || Target == null) return;
 
-    public int damage = 10;
-    public float knockbackForce = 50f;
+        transform.LookAt(Target.transform);
+
+        Vector3 dir = (Target.transform.position - transform.position).normalized;
+        dir.y = 0f;
+
+        RB.linearVelocity = dir * Speed;
+    }
+    public void ApplyKnockback(Vector3 dir, float force)
+    {
+        if (isKnockedBack) return;
+
+        isKnockedBack = true;
+
+        dir.y = 0f;
+        dir.Normalize();
+
+        RB.linearVelocity = Vector3.zero;
+        RB.AddForce(dir * force, ForceMode.Impulse);
+
+        Invoke(nameof(RecoverFromKnockback), knockbackRecoveryTime);
+    }
+
+    void RecoverFromKnockback()
+    {
+        isKnockedBack = false;
+    }
+
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            // Damage
-            Health playerHealth = collision.gameObject.GetComponent<Health>();
-            if (playerHealth != null)
-            {
-                playerHealth.TakeDamage(damage);
-            }
+        if (!collision.gameObject.CompareTag("Player")) return;
 
-            // Knockback
-            Rigidbody playerRB = collision.gameObject.GetComponent<Rigidbody>();
-            if (playerRB != null)
-            {
-                Vector3 knockDir = (collision.transform.position - transform.position).normalized;
-                playerRB.AddForce(knockDir * knockbackForce, ForceMode.Impulse);
-            }
+        FirstPersonController player =
+            collision.gameObject.GetComponent<FirstPersonController>();
+
+        if (player != null)
+        {
+            player.PlayerTakeDmg(damage);
+
+            Vector3 hitDir =
+                collision.transform.position - transform.position;
+
+            player.ApplyHit(hitDir);
         }
-}
+    }
+    bool isKnockedBack;
+    public float knockbackRecoveryTime = 0.3f;
 
 }
